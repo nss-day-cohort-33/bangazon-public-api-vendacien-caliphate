@@ -1,4 +1,8 @@
 {
     "git.ignoreLimitWarning": true,
+<<<<<<< HEAD
     "python.linting.pylintEnabled": true
+=======
+    "python.pythonPath": "bangazonEnv/bin/python3"
+>>>>>>> 9cc9420003f7a872248031a4e06d2692a6f7878f
 }
