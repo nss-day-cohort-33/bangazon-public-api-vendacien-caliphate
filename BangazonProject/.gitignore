@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node_modules
 bower_components
 __pycache__
@@ -9,3 +10,41 @@ obj
 .vscode
 dist
 bangazonEnv
+=======
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Django stuff:
+*.log
+local_settings.py
+
+# pyenv
+.python-version
+
+# dotenv
+.env
+
+# virtualenv
+workforceenv/
+.vscode
+
+.DS_Store
+*.sqlite3
+media/
+*.pyc
+*.db
+*.pid
+
+# django migrations
+migrations
+README.md
+
+#db location
+# hrapp/views/connection.py
+>>>>>>> c4574c336a6d31eb95ef97c58d037dd8c7ece9b2
