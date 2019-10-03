@@ -19,6 +19,7 @@ local_settings.py
 
 # virtualenv
 BangazonEnv/
+bangazonAPIEnv/
 .vscode
 
 .DS_Store
