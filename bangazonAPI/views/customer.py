@@ -57,3 +57,20 @@ class Customers(ViewSet):
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
+    def list(self, request):
+        """Handle GET requests to park attractions resource
+
+        Returns:
+            Response -- JSON serialized list of park attractions
+        """
+        customers = Customer.objects.all()
+
+        # Support filtering Products by producttype id
+        user_id = self.request.query_params.get('customer', None)
+        if user_id is not None:
+            customers = customers.filter(user__id=user_id)
+
+        serializer = CustomerSerializer(
+            customers, many=True, context={'request': request})
+        return Response(serializer.data)
