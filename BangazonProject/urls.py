@@ -17,6 +17,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
+from bangazonAPI import models
 
 router = routers.DefaultRouter(trailing_slash=False)
 
