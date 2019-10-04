@@ -122,4 +122,8 @@ class Products(ViewSet):
 
         serializer = ProductSerializer(
             products, many=True, context={'request': request})
+<<<<<<< HEAD
         return Response(serializer.data)
+=======
+        return Response(serializer.data)
+>>>>>>> master
