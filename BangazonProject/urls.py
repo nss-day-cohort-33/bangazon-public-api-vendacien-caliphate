@@ -3,9 +3,14 @@ from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from bangazonAPI.models import *
 from bangazonAPI.views import Products
+from bangazonAPI.views import Orders
+from bangazonAPI.views import OrderProducts
+
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'products', Products, 'product')
+router.register(r'orders', Orders, 'order')
+router.register(r'orderproducts', OrderProducts, 'orderproduct')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
