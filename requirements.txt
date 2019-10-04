@@ -1,6 +1,7 @@
 astroid==2.3.1
 autopep8==1.4.4
 colorama==0.4.1
+bcac8465fe3fa5c401c3a8a22cb3699e98338b9b
 Django==2.2.6
 django-cors-headers==3.1.1
 djangorestframework==3.10.3
