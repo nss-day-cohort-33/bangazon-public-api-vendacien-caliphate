@@ -9,6 +9,6 @@ class Order(models.Model):
     methods: none
     """
 
+    created_at = models.DateTimeField()
     customer = models.ForeignKey("Customer", on_delete=models.CASCADE)
     paymenttype = models.ForeignKey("PaymentType", on_delete=models.CASCADE)
-    created_at = models.DateTimeField()

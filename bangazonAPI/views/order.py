@@ -4,7 +4,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from bangazonAPI.models import Order, Customer, ProductType
+from bangazonAPI.models import Order, Customer, PaymentType
 
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
@@ -19,7 +19,7 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
             view_name='order',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'customer_id', 'producttype_id')
+        fields = ('id', 'url', 'customer_id', 'paymenttype_id')
 
 
 class Orders(ViewSet):
@@ -34,9 +34,9 @@ class Orders(ViewSet):
         new_order = Order()
         new_order.created_at = request.data["created_at"]
         customer = Customer.objects.get(pk=request.data["customer_id"])
-        producttype = ProductType.objects.get(pk=request.data["producttype_id"])
+        paymenttype = PaymentType.objects.get(pk=request.data["paymenttype_id"])
 
-        new_order.producttype = producttype
+        new_order.paymenttype = paymenttype
         new_order.customer = customer
         new_order.save()
 
@@ -52,8 +52,8 @@ class Orders(ViewSet):
         """
         try:
             customer = Order.objects.get(pk=pk)
-            producttype = Order.objects.get(pk=pk)
-            serializer = OrderSerializer(customer, producttype, context={'request': request})
+            paymenttype = Order.objects.get(pk=pk)
+            serializer = OrderSerializer(customer, paymenttype, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -67,10 +67,10 @@ class Orders(ViewSet):
         order = Order.objects.get(pk=pk)
         order.created_at = request.data["created_at"]
         customer = Customer.objects.get(pk=request.data["customer_id"])
-        producttype = ProductType.objects.get(pk=request.data["producttype_id"])
+        paymenttype = ProductType.objects.get(pk=request.data["producttype_id"])
 
         order.customer = customer
-        order.producttype = producttype
+        order.paymenttype = paymenttype
         order.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
@@ -83,9 +83,9 @@ class Orders(ViewSet):
         """
         try:
             customer = Order.objects.get(pk=pk)
-            producttype = Order.objects.get(pk=pk)
+            paymenttype = Order.objects.get(pk=pk)
             customer.delete()
-            producttype.delete()
+            paymenttype.delete()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 

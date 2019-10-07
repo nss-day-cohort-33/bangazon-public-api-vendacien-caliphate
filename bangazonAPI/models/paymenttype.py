@@ -17,8 +17,8 @@ class PaymentType(models.Model):
     merchant_name = models.CharField(max_length=25)
     account_number = models.CharField(max_length=25)
     exp_date = models.DateField()
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     created_at = models.DateTimeField()
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
 
     class Meta:
