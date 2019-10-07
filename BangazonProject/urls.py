@@ -8,7 +8,7 @@ from bangazonAPI.views import Orders
 from bangazonAPI.views import OrderProducts
 from bangazonAPI.views import Customers
 from bangazonAPI.views import PaymentTypes
-
+from bangazonAPI.views import register_user, login_user
 
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -23,6 +23,8 @@ router.register(r'paymenttypes', PaymentTypes, 'paymenttype')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^register$', register_user),
+    url(r'^login$', login_user),
     url(r'^api-token-auth/', obtain_auth_token),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
