@@ -67,7 +67,7 @@ class Orders(ViewSet):
         order = Order.objects.get(pk=pk)
         order.created_at = request.data["created_at"]
         customer = Customer.objects.get(pk=request.data["customer_id"])
-        paymenttype = ProductType.objects.get(pk=request.data["producttype_id"])
+        paymenttype = PaymentType.objects.get(pk=request.data["paymenttype_id"])
 
         order.customer = customer
         order.paymenttype = paymenttype
