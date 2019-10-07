@@ -4,7 +4,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from bangazonAPI.models import Order, Customer, PaymentType
+from bangazonAPI.models import Order, Customer, PaymentType, OrderProduct
 
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
@@ -14,9 +14,9 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
         serializers
     """
     class Meta:
-        model = Order
+        model = OrderProduct
         url = serializers.HyperlinkedIdentityField(
-            view_name='order',
+            view_name='orderproduct',
             lookup_field='id'
         )
         fields = ('id', 'url', 'customer_id', 'paymenttype_id')
@@ -31,7 +31,7 @@ class Orders(ViewSet):
         Returns:
             Response -- JSON serialized Order instance
         """
-        new_order = Order()
+        new_order = OrderProduct()
         new_order.created_at = request.data["created_at"]
         customer = Customer.objects.get(pk=request.data["customer_id"])
         paymenttype = PaymentType.objects.get(pk=request.data["paymenttype_id"])
@@ -67,7 +67,7 @@ class Orders(ViewSet):
         order = Order.objects.get(pk=pk)
         order.created_at = request.data["created_at"]
         customer = Customer.objects.get(pk=request.data["customer_id"])
-        paymenttype = ProductType.objects.get(pk=request.data["producttype_id"])
+        paymenttype = PaymentType.objects.get(pk=request.data["paymenttype_id"])
 
         order.customer = customer
         order.paymenttype = paymenttype
