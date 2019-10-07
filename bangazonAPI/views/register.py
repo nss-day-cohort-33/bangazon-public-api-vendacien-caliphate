@@ -59,7 +59,7 @@ def register_user(request):
     customer = Customer.objects.create(
         phone_number=req_body['phone_number'],
         address=req_body['address'],
-        user_id=new_user
+        user=new_user
     )
 
     # Commit the user to the database by saving it
