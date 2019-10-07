@@ -19,7 +19,7 @@ class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
             view_name='order',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'name', 'order_id', 'product_id')
+        fields = ('id', 'url', 'order_id', 'product_id')
 
 
 class OrderProducts(ViewSet):
