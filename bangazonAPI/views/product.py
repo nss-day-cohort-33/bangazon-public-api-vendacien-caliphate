@@ -19,7 +19,9 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
             view_name='product',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'name', 'customer_id', 'producttype_id')
+        # This fields method is to pull every attribute or piece of data from an instance of a created Model
+        fields = ('id', 'url', 'name', 'description', 'price', 'created_at', 'quantity', 'customer_id', 'producttype_id')
+        depth = 1
 
 
 class Products(ViewSet):
