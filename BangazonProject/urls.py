@@ -9,6 +9,7 @@ from bangazonAPI.views import OrderProducts
 from bangazonAPI.views import Customers
 from bangazonAPI.views import PaymentTypes
 from bangazonAPI.views import register_user, login_user
+from bangazonAPI.views import ProductCategories
 
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -19,6 +20,7 @@ router.register(r'orderproducts', OrderProducts, 'orderproduct')
 router.register(r'customers', Customers, 'customer')
 router.register(r'products', Products, 'product')
 router.register(r'paymenttypes', PaymentTypes, 'paymenttype')
+router.register(r'productcategories', ProductCategories, 'productcategory')
 
 
 urlpatterns = [
