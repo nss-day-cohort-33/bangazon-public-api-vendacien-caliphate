@@ -24,11 +24,11 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
     description = models.CharField(max_length=255)
     quantity = models.IntegerField()
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
     producttype = models.ForeignKey(ProductType, on_delete=models.CASCADE)
     city = models.CharField(max_length=50)
     product_image = models.ImageField(upload_to='bangazon-public-api-vendacien-caliphate/BangazonProject/bangazonAPI/product_image')
-    
+
 
 
     class Meta:
