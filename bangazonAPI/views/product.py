@@ -19,8 +19,9 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
             view_name='product',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'name', 'price', 'quantity', 'customer_id', 'producttype_id')
-        depth = 2
+        # This fields method is to pull every attribute or piece of data from an instance of a created Model
+        fields = ('id', 'url', 'name', 'description', 'price', 'created_at', 'quantity', 'customer_id', 'producttype_id')
+        depth = 1
 
 
 class Products(ViewSet):
@@ -38,7 +39,6 @@ class Products(ViewSet):
         new_product.price = request.data["price"]
         new_product.description = request.data["description"]
         new_product.quantity = request.data["quantity"]
-        new_product.created_at = request.data["created_at"]
         producttype = ProductType.objects.get(pk=request.data["producttype_id"])
         new_product.city = request.data["city"]
         new_product.product_image = request.data["product_image"]
