@@ -76,12 +76,12 @@ Once you login you will see a navigation bar as follows:
 Bangazon(Home Page), Product Categories, Sell Product, My Profile, Login, and Register
 
 ### Product Category
-`http://localhost:3000/prouctcategory/`
+`http://localhost:3000/productcategory/`
 Displays a listing of product categories with a total number of products in that category to the right of the category name.  Additionally, you will see the last three products added to the category.
 
 ### Sell Product
 `http://localhost:3000/productform/`
-Displays a form allowing a user to add product to sell on Bangazon.  This link will only be visible to authenticated users.  The person filling out the form will be able to enter a title, description, price, quantity, and a product type.
+Displays a form allowing a user to add product to sell on Bangazon.  This link will only be visible to authenticated users.  The person filling out the form will be able to enter name of product, description, quantity, price, city of where it's located, and a product category.
 
 ### My Settings
 `http://localhost:8000/mysettings/`
