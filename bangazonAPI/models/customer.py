@@ -25,4 +25,3 @@ class Customer(models.Model):
 
     # class Meta:
     #     ordering = (F('user.date_joined').asc(nulls_last=True),)
-
