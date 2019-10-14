@@ -2,8 +2,10 @@ from django.db import models
 from django.urls import reverse
 from .producttype import ProductType
 from .customer import Customer
+from safedelete.models import SafeDeleteModel
+from safedelete.models import SOFT_DELETE
 
-class Product(models.Model):
+class Product(SafeDeleteModel):
     '''
     description: This class creates a Product and its properties and joins it to Customer and Product Type.
     author: Group Code
@@ -18,7 +20,7 @@ class Product(models.Model):
       city: city the product is available in to be sold
       product_image: path for user uploading product images to product
     '''
-
+    _safedelete_policy = SOFT_DELETE
     name = models.CharField(max_length=50)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=5, decimal_places=2)
