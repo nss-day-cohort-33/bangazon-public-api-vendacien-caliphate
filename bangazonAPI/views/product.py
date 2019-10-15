@@ -4,6 +4,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
+from rest_framework.decorators import action
 from bangazonAPI.models import Product, Customer, ProductType
 
 
@@ -58,7 +59,7 @@ class Products(ViewSet):
             Response -- JSON serialized park area instance
         """
         try:
-            # customer = Product.objects.get(pk=pk)
+            customer = Product.objects.get(pk=pk)
             producttype = Product.objects.get(pk=pk)
             serializer = ProductSerializer(customer, producttype, context={'request': request})
             return Response(serializer.data)
@@ -123,10 +124,6 @@ class Products(ViewSet):
             products = products.filter(producttype__id=producttype)
 
                 # Support filtering attractions by area id
-        # customer = Customer.objects.get(user=request.auth.user)
-        customer = self.request.query_params.get('customer', None)
-        if customer is not None:
-            products = products.filter(customer_id=customer)
         category = self.request.query_params.get('category', None)
         quantity = self.request.query_params.get('quantity', None)
         if category is not None:
@@ -151,4 +148,18 @@ class Products(ViewSet):
 
         serializer = ProductSerializer(
             products, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+    # Gets current customers products.
+    @action(methods=['get'], detail=False)
+    def myproduct(self, request):
+
+        try:
+            customer = Customer.objects.get(user=request.auth.user)
+            products_of_customer = Product.objects.filter(customer=customer)
+        except Product.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ProductSerializer(products_of_customer, many=True, context={'request': request})
         return Response(serializer.data)
