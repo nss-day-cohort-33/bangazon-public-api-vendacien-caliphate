@@ -1,0 +1,13 @@
+[
+    {
+        "model": "bangazonAPI.paymenttype",
+        "pk": 1,
+        "fields": {
+            "merchant_name": "MASTER CARD",
+            "account_number": "9283749872",
+            "exp_date": "2019-10-28",
+            "created_at": "2019-08-21",
+            "customer_id": 1
+        }
+    }
+]
