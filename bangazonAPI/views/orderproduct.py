@@ -19,7 +19,7 @@ class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
             view_name='order',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'order_id', 'product_id', 'paymenttype', 'customer_id', 'customer', 'created_at', 'line_items')
+        fields = ('id', 'url', 'order', 'product')
         depth = 1
 
 class OrderProducts(ViewSet):
@@ -50,9 +50,8 @@ class OrderProducts(ViewSet):
             Response -- JSON serialized park area instance
         """
         try:
-            order = OrderProduct.objects.get(pk=pk)
-            product = OrderProduct.objects.get(pk=pk)
-            serializer = OrderProductSerializer(order, product, context={'request': request})
+            orderproduct = OrderProduct.objects.get(pk=pk)
+            serializer = OrderProductSerializer(orderproduct, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -80,10 +79,8 @@ class OrderProducts(ViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
-            order = OrderProduct.objects.get(pk=pk)
-            product = OrderProduct.objects.get(pk=pk)
-            order.delete()
-            product.delete()
+            orderproduct = OrderProduct.objects.get(pk=pk)
+            orderproduct.delete()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
@@ -101,10 +98,15 @@ class OrderProducts(ViewSet):
         """
         order_products = OrderProduct.objects.all()
 
-        # Support filtering OrderProduct by Order id
         order = self.request.query_params.get('order', None)
+        product = self.request.query_params.get('product', None)
+        payment = self.request.query_params.get('payment', None)
+
+
+        if product is not None:
+            order_products = order_products.filter(product__id=product)
         if order is not None:
-            order_products = order_products.filter(order__id=order)
+            order_products = order_products.filter(order_payment=None)
 
         serializer = OrderProductSerializer(
             order_products, many=True, context={'request': request})

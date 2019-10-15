@@ -124,5 +124,3 @@ class Orders(ViewSet):
             )
 
         return Response(serializer.data)
-
-
