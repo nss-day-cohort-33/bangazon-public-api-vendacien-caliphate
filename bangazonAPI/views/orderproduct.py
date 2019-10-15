@@ -4,7 +4,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from bangazonAPI.models import Order, Product, OrderProduct
+from bangazonAPI.models import Order, Product, OrderProduct, Customer, PaymentType
 
 
 class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
@@ -19,8 +19,8 @@ class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
             view_name='order',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'order_id', 'product_id')
-
+        fields = ('id', 'url', 'order_id', 'product_id', 'paymenttype', 'customer_id', 'customer', 'created_at', 'line_items')
+        depth = 1
 
 class OrderProducts(ViewSet):
     """Orders for Bangazon API"""
