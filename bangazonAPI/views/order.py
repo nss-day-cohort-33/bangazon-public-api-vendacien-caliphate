@@ -18,10 +18,10 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Order
         url = serializers.HyperlinkedIdentityField(
-            view_name='orderproduct',
+            view_name='order',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'order', 'product')
+        fields = ('id', 'url', 'product', 'paymenttype', 'customer')
         depth = 1
 
 class Orders(ViewSet):
@@ -36,8 +36,8 @@ class Orders(ViewSet):
         order_item = OrderProduct()
         order_item.product = Product.objects.get(pk=request.data["product_id"])
 
-        current_customer = Customer.objects.get(pk=request.user.id)
-        order = Order.objects.filter(customer=current_customer, payment=None)
+        order = Order.objects.filter(customer=request.auth.user, paymenttype__isnull=False)
+        current_customer = Customer.objects.get(customer=request.auth.user)
 
         if order.exists():
             print("open order in db. Add it and the prod to OrderProduct")
@@ -106,13 +106,14 @@ class Orders(ViewSet):
             Response -- JSON serialized list of park attractions
         """
         orders = Order.objects.all()
-        customer = Customer.objects.get(pk=request.user.id)
+        customer = Customer.objects.get(pk=1)
+        # (pk=request.auth.user)
 
         cart = self.request.query_params.get('cart', None)
-        orders = orders.filter(customer_id=customer)
+        orders = orders.filter(customer=customer)
         print("orders", orders)
         if cart is not None:
-            orders = orders.filter(payment=None).get()
+            orders = orders.filter(paymenttype=None).get()
             print("orders filtered", orders)
             serializer = OrderSerializer(
                 orders, many=False, context={'request': request}
@@ -122,5 +123,6 @@ class Orders(ViewSet):
             serializer = OrderSerializer(
                 orders, many=True, context={'request': request}
             )
+        serializer = OrderSerializer(orders, many=True, context={'request': request})
 
         return Response(serializer.data)
