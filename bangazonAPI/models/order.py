@@ -11,4 +11,4 @@ class Order(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     customer = models.ForeignKey("Customer", on_delete=models.CASCADE)
-    paymenttype = models.ForeignKey("PaymentType", on_delete=models.CASCADE)
+    paymenttype = models.ForeignKey("PaymentType", on_delete=models.CASCADE, null=True)

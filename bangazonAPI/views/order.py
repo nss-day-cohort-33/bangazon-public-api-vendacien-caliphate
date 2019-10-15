@@ -1,4 +1,4 @@
-"""View module for handling requests about park areas"""
+"""View module for handling requests about orders"""
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -56,10 +56,10 @@ class Orders(ViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        """Handle GET requests for single park area
+        """Handle GET requests for single order
 
         Returns:
-            Response -- JSON serialized park area instance
+            Response -- JSON serialized order instance
         """
         try:
             order = Order.objects.get(pk=pk)
@@ -82,7 +82,7 @@ class Orders(ViewSet):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
-        """Handle DELETE requests for a single park are
+        """Handle DELETE requests for a single order are
 
         Returns:
             Response -- 200, 404, or 500 status code
@@ -100,10 +100,10 @@ class Orders(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request):
-        """Handle GET requests to park attractions resource
+        """Handle GET requests to orders resource
 
         Returns:
-            Response -- JSON serialized list of park attractions
+            Response -- JSON serialized list of orders
         """
         orders = Order.objects.all()
         customer = Customer.objects.get(pk=request.user.id)
@@ -112,7 +112,7 @@ class Orders(ViewSet):
         orders = orders.filter(customer_id=customer)
         print("orders", orders)
         if cart is not None:
-            orders = orders.filter(payment=None).get()
+            orders = orders.filter(paymenttype=None).get()
             print("orders filtered", orders)
             serializer = OrderSerializer(
                 orders, many=False, context={'request': request}
