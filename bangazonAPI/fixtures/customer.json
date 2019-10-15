@@ -1,0 +1,11 @@
+[
+    {
+        "model": "bangazonAPI.customer",
+        "pk": 1,
+        "fields": {
+            "phone_number": "9018882829",
+            "address": "me",
+            "user_id": 1
+        }
+    }
+]
