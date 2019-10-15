@@ -58,7 +58,7 @@ class Products(ViewSet):
             Response -- JSON serialized park area instance
         """
         try:
-            customer = Product.objects.get(pk=pk)
+            # customer = Product.objects.get(pk=pk)
             producttype = Product.objects.get(pk=pk)
             serializer = ProductSerializer(customer, producttype, context={'request': request})
             return Response(serializer.data)
@@ -123,6 +123,10 @@ class Products(ViewSet):
             products = products.filter(producttype__id=producttype)
 
                 # Support filtering attractions by area id
+        # customer = Customer.objects.get(user=request.auth.user)
+        customer = self.request.query_params.get('customer', None)
+        if customer is not None:
+            products = products.filter(customer_id=customer)
         category = self.request.query_params.get('category', None)
         quantity = self.request.query_params.get('quantity', None)
         if category is not None:
