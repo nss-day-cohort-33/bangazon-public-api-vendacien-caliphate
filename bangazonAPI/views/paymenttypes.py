@@ -5,6 +5,9 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from bangazonAPI.models import PaymentType, Customer
+from datetime import date
+
+
 
 
 class PaymentTypeSerializer(serializers.HyperlinkedModelSerializer):
@@ -32,10 +35,20 @@ class PaymentTypes(ViewSet):
         Returns:
             Response -- JSON serialized Attraction instance
         """
+
+        def check_expiration():
+            print(date.today())
+            print(request.data["exp_date"])
+            try:
+                date.today() >= (request.data["exp_date"].date
+                return request.data["exp_date"]
+            except:
+                return Response({"error": "Dat date no good"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         new_paymenttype = PaymentType()
         new_paymenttype.merchant_name = request.data["merchant_name"]
         new_paymenttype.account_number = request.data["account_number"]
-        new_paymenttype.exp_date = request.data["exp_date"]
+        new_paymenttype.exp_date = check_expiration()
         customer = Customer.objects.get(user=request.auth.user)
         new_paymenttype.customer = customer
         new_paymenttype.save()
