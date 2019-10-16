@@ -8,3 +8,4 @@ from .orderproduct import OrderProducts
 from .productcategory import ProductCategories
 from .orderproduct import OrderProductSerializer
 from .product import ProductSerializer
+from .user import UserViewSet
