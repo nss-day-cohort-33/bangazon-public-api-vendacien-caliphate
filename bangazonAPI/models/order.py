@@ -2,6 +2,7 @@ from django.db import models
 from .customer import Customer
 from .paymenttype import PaymentType
 
+
 class Order(models.Model):
     """
     Creates the join table for the many to many relationship between paymenttype and customer
