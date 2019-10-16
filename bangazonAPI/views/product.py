@@ -36,7 +36,7 @@ class Products(ViewSet):
         """
         new_product = Product()
         new_product.name = request.data["name"]
-        customer = Customer.objects.get(pk=request.data["customer_id"])
+        customer = Customer.objects.get(user=request.auth.user)
         new_product.price = request.data["price"]
         new_product.description = request.data["description"]
         new_product.quantity = request.data["quantity"]
@@ -123,9 +123,16 @@ class Products(ViewSet):
         if producttype is not None:
             products = products.filter(producttype__id=producttype)
 
-                # Support filtering attractions by area id
+            # Support filtering attractions by area id
+        city = self.request.query_params.get('city', None)
         category = self.request.query_params.get('category', None)
         quantity = self.request.query_params.get('quantity', None)
+
+        if city == "":
+            products = Product.objects.all()
+        elif city is not None:
+            products = Product.objects.filter(city=city.lower())
+
         if category is not None:
             products = products.filter(producttype__id=category)
             for product in products:
