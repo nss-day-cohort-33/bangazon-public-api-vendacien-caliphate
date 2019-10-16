@@ -122,9 +122,16 @@ class Products(ViewSet):
         if producttype is not None:
             products = products.filter(producttype__id=producttype)
 
-                # Support filtering attractions by area id
+            # Support filtering attractions by area id
+        city = self.request.query_params.get('city', None)
         category = self.request.query_params.get('category', None)
         quantity = self.request.query_params.get('quantity', None)
+
+        if city == "":
+            products = Product.objects.all()
+        elif city is not None:
+            products = Product.objects.filter(city=city.lower())
+
         if category is not None:
             products = products.filter(producttype__id=category)
             for product in products:
