@@ -4,6 +4,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
+from rest_framework.decorators import action
 from bangazonAPI.models import Product, Customer, ProductType
 
 
@@ -154,4 +155,18 @@ class Products(ViewSet):
 
         serializer = ProductSerializer(
             products, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+    # Gets current customers products.
+    @action(methods=['get'], detail=False)
+    def myproduct(self, request):
+
+        try:
+            customer = Customer.objects.get(user=request.auth.user)
+            products_of_customer = Product.objects.filter(customer=customer)
+        except Product.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ProductSerializer(products_of_customer, many=True, context={'request': request})
         return Response(serializer.data)

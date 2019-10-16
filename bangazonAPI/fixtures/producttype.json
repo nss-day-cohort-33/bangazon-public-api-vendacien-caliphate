@@ -1,0 +1,30 @@
+[
+    {
+        "model": "bangazonAPI.producttype",
+        "pk": 1,
+        "fields": {
+            "name": "Food"
+        }
+    },
+    {
+        "model": "bangazonAPI.producttype",
+        "pk": 2,
+        "fields": {
+            "name": "Electronics"
+        }
+    },
+    {
+        "model": "bangazonAPI.producttype",
+        "pk": 3,
+        "fields": {
+            "name": "Art"
+        }
+    },
+    {
+        "model": "bangazonAPI.producttype",
+        "pk": 6,
+        "fields": {
+            "name": "Music"
+        }
+    }
+]

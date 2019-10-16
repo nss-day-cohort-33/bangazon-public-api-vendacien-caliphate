@@ -6,3 +6,5 @@ from .paymenttypes import PaymentTypes
 from .order import Orders
 from .orderproduct import OrderProducts
 from .productcategory import ProductCategories
+from .orderproduct import OrderProductSerializer
+from .product import ProductSerializer
