@@ -36,7 +36,7 @@ class Products(ViewSet):
         """
         new_product = Product()
         new_product.name = request.data["name"]
-        customer = Customer.objects.get(pk=request.data["customer_id"])
+        customer = Customer.objects.get(user=request.auth.user)
         new_product.price = request.data["price"]
         new_product.description = request.data["description"]
         new_product.quantity = request.data["quantity"]
