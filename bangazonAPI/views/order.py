@@ -4,7 +4,9 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from bangazonAPI.models import Order, Customer, PaymentType, OrderProduct
+from bangazonAPI.models import Order, Customer, PaymentType, OrderProduct, Product
+from .orderproduct import OrderProductSerializer
+from .product import ProductSerializer
 
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
@@ -14,13 +16,13 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
         serializers
     """
     class Meta:
-        model = OrderProduct
+        model = Order
         url = serializers.HyperlinkedIdentityField(
-            view_name='orderproduct',
+            view_name='order',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'customer_id', 'paymenttype_id')
-
+        fields = ('id', 'url', 'product', 'paymenttype', 'customer')
+        depth = 1
 
 class Orders(ViewSet):
     """Orders for Bangazon API"""
@@ -31,16 +33,25 @@ class Orders(ViewSet):
         Returns:
             Response -- JSON serialized Order instance
         """
-        new_order = OrderProduct()
-        new_order.created_at = request.data["created_at"]
-        customer = Customer.objects.get(pk=request.data["customer_id"])
-        paymenttype = PaymentType.objects.get(pk=request.data["paymenttype_id"])
+        order_item = OrderProduct()
+        order_item.product = Product.objects.get(pk=request.data["product_id"])
 
-        new_order.paymenttype = paymenttype
-        new_order.customer = customer
-        new_order.save()
+        order = Order.objects.filter(customer=request.auth.user, paymenttype__isnull=False)
+        current_customer = Customer.objects.get(customer=request.auth.user)
 
-        serializer = OrderSerializer(new_order, context={'request': request})
+        if order.exists():
+            print("open order in db. Add it and the prod to OrderProduct")
+            order_item.order = order[0]
+        else:
+            print("no open orders. Time to make a new order to add this product to")
+            new_order = Order()
+            new_order.customer = current_customer
+            new_order.save()
+            order_item.order = new_order
+
+        order_item.save()
+
+        serializer = OrderProductSerializer(order_item, context={'request': request})
 
         return Response(serializer.data)
 
@@ -51,9 +62,8 @@ class Orders(ViewSet):
             Response -- JSON serialized park area instance
         """
         try:
-            customer = Order.objects.get(pk=pk)
-            paymenttype = Order.objects.get(pk=pk)
-            serializer = OrderSerializer(customer, paymenttype, context={'request': request})
+            order = Order.objects.get(pk=pk)
+            serializer = OrderSerializer(order, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -65,12 +75,8 @@ class Orders(ViewSet):
             Response -- Empty body with 204 status code
         """
         order = Order.objects.get(pk=pk)
-        order.created_at = request.data["created_at"]
-        customer = Customer.objects.get(pk=request.data["customer_id"])
-        paymenttype = PaymentType.objects.get(pk=request.data["paymenttype_id"])
-
-        order.customer = customer
-        order.paymenttype = paymenttype
+        payment = PaymentType.objects.get(pk=request.data["payment_id"])
+        order.payment = payment
         order.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
@@ -82,10 +88,8 @@ class Orders(ViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
-            customer = Order.objects.get(pk=pk)
-            paymenttype = Order.objects.get(pk=pk)
-            customer.delete()
-            paymenttype.delete()
+            order = Order.objects.get(pk=pk)
+            order.delete()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
@@ -102,23 +106,23 @@ class Orders(ViewSet):
             Response -- JSON serialized list of park attractions
         """
         orders = Order.objects.all()
+        customer = Customer.objects.get(pk=1)
+        # (pk=request.auth.user)
 
-        # Support filtering Orders by customer id
-        customer = self.request.query_params.get('customer', None)
-        if customer is not None:
-            orders = orders.filter(customer__id=customer)
+        cart = self.request.query_params.get('cart', None)
+        orders = orders.filter(customer=customer)
+        print("orders", orders)
+        if cart is not None:
+            orders = orders.filter(paymenttype=None).get()
+            print("orders filtered", orders)
+            serializer = OrderSerializer(
+                orders, many=False, context={'request': request}
+            )
 
-        serializer = OrderSerializer(
-            orders, many=True, context={'request': request})
+        else:
+            serializer = OrderSerializer(
+                orders, many=True, context={'request': request}
+            )
+        serializer = OrderSerializer(orders, many=True, context={'request': request})
+
         return Response(serializer.data)
-
-
-# description - This is the view for Orders, where the http request are defined for Orders
-# Author - Drew Palazola
-# properties -
-# 1. Order serializers
-# 2. Create
-# 3.Retrieve
-# 4.Update
-# 5.Destroy
-# 6.List
