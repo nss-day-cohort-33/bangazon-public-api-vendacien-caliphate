@@ -34,10 +34,10 @@ class Orders(ViewSet):
             Response -- JSON serialized Order instance
         """
         order_item = OrderProduct()
-        order_item.product = Product.objects.get(pk=request.data["product_id"])
+        order_item.product = Product.objects.get(pk=request.data["id"])
 
-        order = Order.objects.filter(customer=request.auth.user, paymenttype__isnull=False)
-        current_customer = Customer.objects.get(customer=request.auth.user)
+        current_customer = Customer.objects.get(user=request.auth.user)
+        order = Order.objects.filter(customer=current_customer, paymenttype__isnull=True)
 
         if order.exists():
             print("open order in db. Add it and the prod to OrderProduct")
