@@ -14,3 +14,7 @@ class Order(models.Model):
     customer = models.ForeignKey("Customer", on_delete=models.CASCADE)
     paymenttype = models.ForeignKey("PaymentType", on_delete=models.CASCADE, null=True)
     product = models.ManyToManyField("Product", through="OrderProduct")
+
+    class Meta:
+            verbose_name = ("order")
+            verbose_name_plural = ("orders")
