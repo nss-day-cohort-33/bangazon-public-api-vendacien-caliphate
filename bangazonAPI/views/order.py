@@ -100,23 +100,41 @@ class Orders(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @action(methods=['get'], detail=False)
+    @action(methods=['get','put'], detail=False)
     def cart(self, request):
         """Handle GET one cart from logged in user
 
         Returns:
             Response -- JSON serialized list of products and order
         """
-        current_user = Customer.objects.get(user=request.auth.user)
+        if request.method == "GET":
+            current_user = Customer.objects.get(user=request.auth.user)
 
-        try:
-            open_order = Order.objects.get(customer=current_user, paymenttype=None)
-            products_on_order = Product.objects.filter(cart__order=open_order)
-        except Order.DoesNotExist as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+            try:
+                open_order = Order.objects.get(customer=current_user, paymenttype=None)
+                products_on_order = Product.objects.filter(cart__order=open_order)
+            except Order.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = ProductSerializer(products_on_order, many=True, context={'request': request})
-        return Response(serializer.data)
+            serializer = ProductSerializer(products_on_order, many=True, context={'request': request})
+            return Response(serializer.data)
+
+        if request.method == "PUT":
+            current_user = Customer.objects.get(user=request.auth.user)
+
+            try:
+                open_order = Order.objects.get(customer=current_user, paymenttype=None)
+                products_on_order = Product.objects.filter(cart__order=open_order)
+                product = Product.objects.get(pk=request.data["product_id"])
+                delete_me = OrderProduct.objects.filter(product=product, order=open_order)[0]
+                delete_me.delete()
+
+            except Order.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = ProductSerializer(products_on_order, many=True, context={'request': request})
+            return Response(serializer.data)
+
 
     def list(self, request):
         """Handle GET requests to orders resource
