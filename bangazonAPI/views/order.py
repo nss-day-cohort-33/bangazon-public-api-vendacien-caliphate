@@ -125,7 +125,7 @@ class Orders(ViewSet):
             Response -- JSON serialized list of orders
         """
         orders = Order.objects.all()
-        customer = Customer.objects.get(pk=1)
+        customer = Customer.objects.get(pk=request.auth.user.id)
         # (pk=request.auth.user)
 
         cart = self.request.query_params.get('cart', None)
