@@ -100,7 +100,7 @@ class Orders(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @action(methods=['get'], detail=False)
+    @action(methods=['get', 'put'], detail=False)
     def cart(self, request):
         """Handle GET one cart from logged in user
 
@@ -108,15 +108,36 @@ class Orders(ViewSet):
             Response -- JSON serialized list of products and order
         """
         current_user = Customer.objects.get(user=request.auth.user)
+        if request.method == "GET":
 
-        try:
-            open_order = Order.objects.get(customer=current_user, paymenttype=None)
-            products_on_order = Product.objects.filter(cart__order=open_order)
-        except Order.DoesNotExist as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = ProductSerializer(products_on_order, many=True, context={'request': request})
-        return Response(serializer.data)
+
+            try:
+                open_order = Order.objects.get(customer=current_user, paymenttype=None)
+                products_on_order = Product.objects.filter(cart__order=open_order)
+            except Order.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = ProductSerializer(products_on_order, many=True, context={'request': request})
+            return Response(serializer.data)
+
+        if request.method == "PUT":
+
+            # get current user
+            # get current user open order
+            # get payment id from request body
+            # add payment id to order object
+            # save order object
+            try:
+                current_user = Customer.objects.get(user=request.auth.user)
+                open_order = Order.objects.get(customer=current_user, paymenttype=None)
+                payment_id = PaymentType.objects.get(pk=request.data["payment_id"])
+                open_order.paymenttype = payment_id
+                open_order.save()
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+            except Order.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     def list(self, request):
         """Handle GET requests to orders resource
@@ -125,11 +146,11 @@ class Orders(ViewSet):
             Response -- JSON serialized list of orders
         """
         orders = Order.objects.all()
-        customer = Customer.objects.get(pk=1)
+        customer = Customer.objects.get(pk=request.auth.user.id)
         # (pk=request.auth.user)
 
         cart = self.request.query_params.get('cart', None)
-        orders = orders.filter(customer=customer)
+        orders = orders.filter(customer=customer, paymenttype=None)
         print("orders", orders)
         if cart is not None:
             orders = orders.filter(paymenttype=None).get()
