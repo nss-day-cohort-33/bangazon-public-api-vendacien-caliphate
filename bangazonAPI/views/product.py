@@ -21,7 +21,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
             lookup_field='id'
         )
         # This fields method is to pull every attribute or piece of data from an instance of a created Model
-        fields = ('id', 'url', 'name', 'description', 'price', 'created_at', 'quantity', 'customer_id', 'producttype_id')
+        fields = ('id', 'url', 'name', 'description', 'price', 'quantity', 'producttype_id', 'total_sold')
         depth = 1
 
 
@@ -59,9 +59,9 @@ class Products(ViewSet):
             Response -- JSON serialized park area instance
         """
         try:
-            customer = Product.objects.get(pk=pk)
-            producttype = Product.objects.get(pk=pk)
-            serializer = ProductSerializer(customer, producttype, context={'request': request})
+            product = Product.objects.get(pk=pk)
+            # producttype = Product.objects.get(pk=pk)
+            serializer = ProductSerializer(product, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -170,3 +170,4 @@ class Products(ViewSet):
 
         serializer = ProductSerializer(products_of_customer, many=True, context={'request': request})
         return Response(serializer.data)
+

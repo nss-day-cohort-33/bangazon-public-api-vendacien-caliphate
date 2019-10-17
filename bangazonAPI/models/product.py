@@ -40,3 +40,7 @@ class Product(SafeDeleteModel):
     def get_absolute_url(self):
         return reverse("product_details", kwargs={"pk": self.pk})
 
+    @property
+    def total_sold(self):
+        return self.cart.filter(order__paymenttype__isnull=False).count()
+
