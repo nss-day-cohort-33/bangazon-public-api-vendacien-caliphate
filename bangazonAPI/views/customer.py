@@ -1,5 +1,6 @@
 """View module for handling requests about park areas"""
 from django.http import HttpResponseServerError
+from rest_framework.decorators import action
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
@@ -19,7 +20,8 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
             view_name='customer',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'phone_number', 'address', 'user_id')
+        fields = ('id', 'url', 'phone_number', 'address', 'user', 'user_id')
+        depth = 1
 
 
 class Customers(ViewSet):

@@ -77,8 +77,10 @@ class OrderProducts(ViewSet):
 
         Returns:
             Response -- 200, 404, or 500 status code
+            how to get current users open order
         """
         try:
+            
             orderproduct = OrderProduct.objects.get(pk=pk)
             orderproduct.delete()
 

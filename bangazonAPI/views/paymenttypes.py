@@ -36,25 +36,18 @@ class PaymentTypes(ViewSet):
             Response -- JSON serialized Attraction instance
         """
 
-        # def check_expiration():
-        #     print(datetime.today())
-        #     print(datetime.strptime(request.data["exp_date"], '%Y-%m-%d'))
-        if datetime.today() <= datetime.strptime(request.data["exp_date"], '%Y-%m-%d'):
-            new_paymenttype = PaymentType()
-            new_paymenttype.merchant_name = request.data["merchant_name"]
-            new_paymenttype.account_number = request.data["account_number"]
-            new_paymenttype.exp_date = request.data["exp_date"]
-            customer = Customer.objects.get(user=request.auth.user)
-            new_paymenttype.customer = customer
-            new_paymenttype.save()
+        new_paymenttype = PaymentType()
+        new_paymenttype.merchant_name = request.data["merchant_name"]
+        new_paymenttype.account_number = request.data["account_number"]
+        new_paymenttype.exp_date = request.data["exp_date"]
+        customer = Customer.objects.get(user=request.auth.user)
+        new_paymenttype.customer = customer
+        new_paymenttype.save()
 
-            serializer = PaymentTypeSerializer(new_paymenttype, context={'request': request})
+        serializer = PaymentTypeSerializer(new_paymenttype, context={'request': request})
 
-            return Response(serializer.data)
-        else:
-            return Response({"error": "Dat date no good"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data)
 
-        # check_expiration()
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single payment types
