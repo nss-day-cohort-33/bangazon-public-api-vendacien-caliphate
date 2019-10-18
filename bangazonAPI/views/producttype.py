@@ -71,8 +71,6 @@ class ProductTypes(ViewSet):
         """
         try:
 
-            # product_type = ProductType.objects.get(pk=pk)
-            # product_type.delete()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
