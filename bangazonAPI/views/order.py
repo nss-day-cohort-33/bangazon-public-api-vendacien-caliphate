@@ -102,11 +102,11 @@ class Orders(ViewSet):
 
     @action(methods=['get','put'], detail=False)
     def cart(self, request):
-        """Handle GET one cart from logged in user
+    # """Handle GET one cart from logged in user
 
-        Returns:
-            Response -- JSON serialized list of products and order
-        """
+    #     Returns:
+    #     Response -- JSON serialized list of products and order
+    # """
         if request.method == "GET":
             current_user = Customer.objects.get(user=request.auth.user)
 

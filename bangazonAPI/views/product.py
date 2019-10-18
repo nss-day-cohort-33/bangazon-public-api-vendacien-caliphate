@@ -60,7 +60,6 @@ class Products(ViewSet):
         """
         try:
             product = Product.objects.get(pk=pk)
-            # producttype = Product.objects.get(pk=pk)
             serializer = ProductSerializer(product, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
