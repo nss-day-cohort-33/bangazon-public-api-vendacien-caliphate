@@ -76,3 +76,14 @@ class Customers(ViewSet):
         serializer = CustomerSerializer(
             customers, many=True, context={'request': request})
         return Response(serializer.data)
+
+    @action(methods=['get'], detail=False)
+    def currentCustomer(self, request):
+
+        try:
+            customer = Customer.objects.get(user=request.auth.user)
+        except Customer.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CustomerSerializer(customer, context={'request': request})
+        return Response(serializer.data)
