@@ -21,7 +21,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
             lookup_field='id'
         )
         # This fields method is to pull every attribute or piece of data from an instance of a created Model
-        fields = ('id', 'url', 'name', 'description', 'price', 'quantity', 'producttype_id', 'total_sold')
+        fields = ('id', 'url', 'name', 'description', 'price', 'quantity', 'total_sold')
         depth = 1
 
 
@@ -60,7 +60,6 @@ class Products(ViewSet):
         """
         try:
             product = Product.objects.get(pk=pk)
-            # producttype = Product.objects.get(pk=pk)
             serializer = ProductSerializer(product, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:

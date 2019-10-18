@@ -80,7 +80,7 @@ class OrderProducts(ViewSet):
             how to get current users open order
         """
         try:
-            
+
             orderproduct = OrderProduct.objects.get(pk=pk)
             orderproduct.delete()
 
@@ -113,13 +113,3 @@ class OrderProducts(ViewSet):
         serializer = OrderProductSerializer(
             order_products, many=True, context={'request': request})
         return Response(serializer.data)
-
-# description - This is the view for OrderProduct, where the http request are defined for OrderProducts
-# Author - Drew Palazola
-# properties -
-# 1. Order serializers
-# 2. Create
-# 3.Retrieve
-# 4.Update
-# 5.Destroy
-# 6.List
