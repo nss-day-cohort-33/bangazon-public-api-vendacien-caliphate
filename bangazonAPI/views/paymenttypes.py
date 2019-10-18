@@ -72,7 +72,7 @@ class PaymentTypes(ViewSet):
         new_paymenttype.merchant_name = request.data["merchant_name"]
         new_paymenttype.account_number = request.data["account_number"]
         new_paymenttype.exp_date = request.data["exp_date"]
-        customer = Customer.objects.get(pk=request.data["customer_id"])
+        customer = Customer.objects.get(user=request.auth.user)
         new_paymenttype.created_at = request.data["created_at"]
         new_paymenttype.customer = customer
         new_paymenttype.save()
@@ -106,7 +106,7 @@ class PaymentTypes(ViewSet):
         paymenttypes = PaymentType.objects.all()
 
         # Support filtering Products by producttype id
-        customer = self.request.query_params.get('customer_id', None)
+        customer = Customer.objects.get(user=request.auth.user)
         if customer is not None:
             paymenttypes = paymenttypes.filter(customer=customer)
 

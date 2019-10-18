@@ -21,7 +21,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
             lookup_field='id'
         )
         # This fields method is to pull every attribute or piece of data from an instance of a created Model
-        fields = ('id', 'url', 'name', 'description', 'price', 'quantity', 'producttype_id', 'total_sold')
+        fields = ('id', 'url', 'name', 'description', 'price', 'quantity', 'total_sold')
         depth = 1
 
 
