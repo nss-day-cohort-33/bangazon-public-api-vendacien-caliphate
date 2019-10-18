@@ -106,9 +106,9 @@ class PaymentTypes(ViewSet):
         paymenttypes = PaymentType.objects.all()
 
         # Support filtering Products by producttype id
-        customer = self.request.query_params.get('paymenttype', None)
+        customer = self.request.query_params.get('customer_id', None)
         if customer is not None:
-            paymenttypes = paymenttypes.filter(paymenttype__id=paymenttypes)
+            paymenttypes = paymenttypes.filter(customer=customer)
 
         serializer = PaymentTypeSerializer(
             paymenttypes, many=True, context={'request': request})
