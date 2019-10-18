@@ -100,7 +100,7 @@ class Orders(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @action(methods=['get', 'put'], detail=False)
+    @action(methods=['get', 'put', 'delete'], detail=False)
     def cart(self, request):
         """Handle GET one cart from logged in user
 
@@ -120,6 +120,18 @@ class Orders(ViewSet):
 
             serializer = ProductSerializer(products_on_order, many=True, context={'request': request})
             return Response(serializer.data)
+
+        if request.method == "DELETE":
+                try:
+                    open_order = Order.objects.get(customer=current_user, paymenttype=None)
+                    open_order.delete()
+
+                    return Response({}, status=status.HTTP_204_NO_CONTENT)
+                except Order.DoesNotExist as ex:
+                    return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+                except Exception as ex:
+                    return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
         if request.method == "PUT":
 
