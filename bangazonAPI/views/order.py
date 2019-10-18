@@ -123,16 +123,30 @@ class Orders(ViewSet):
 
         if request.method == "PUT":
 
-            try:
-                current_user = Customer.objects.get(user=request.auth.user)
-                open_order = Order.objects.get(customer=current_user, paymenttype=None)
-                payment_id = PaymentType.objects.get(pk=request.data["payment_id"])
-                open_order.paymenttype = payment_id
-                open_order.save()
+            if "payment_id" in request.data:
+                try:
+                    open_order = Order.objects.get(customer=current_user, paymenttype=None)
+                    payment_id = PaymentType.objects.get(pk=request.data["payment_id"])
+                    open_order.paymenttype = payment_id
+                    open_order.save()
+                    return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+                except Order.DoesNotExist as ex:
+                    return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            if "product_id" in request.data:
+
+                try:
+                    open_order = Order.objects.get(customer=current_user, paymenttype=None)
+                    product = Product.objects.get(pk=request.data["product_id"])
+                    delete_me = OrderProduct.objects.filter(product=product, order=open_order)[0]
+                    delete_me.delete()
+
+                except Order.DoesNotExist as ex:
+                    return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
                 return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-            except Order.DoesNotExist as ex:
-                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     def list(self, request):
         """Handle GET requests to orders resource
