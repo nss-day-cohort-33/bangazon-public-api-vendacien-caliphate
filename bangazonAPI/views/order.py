@@ -137,7 +137,6 @@ class Orders(ViewSet):
 
                 try:
                     open_order = Order.objects.get(customer=current_user, paymenttype=None)
-                    products_on_order = Product.objects.filter(cart__order=open_order)
                     product = Product.objects.get(pk=request.data["product_id"])
                     delete_me = OrderProduct.objects.filter(product=product, order=open_order)[0]
                     delete_me.delete()
@@ -145,8 +144,7 @@ class Orders(ViewSet):
                 except Order.DoesNotExist as ex:
                     return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
-                serializer = ProductSerializer(products_on_order, many=True, context={'request': request})
-                return Response(serializer.data)
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
     def list(self, request):
