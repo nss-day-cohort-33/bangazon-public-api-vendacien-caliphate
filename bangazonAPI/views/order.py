@@ -123,11 +123,6 @@ class Orders(ViewSet):
 
         if request.method == "PUT":
 
-            # get current user
-            # get current user open order
-            # get payment id from request body
-            # add payment id to order object
-            # save order object
             try:
                 current_user = Customer.objects.get(user=request.auth.user)
                 open_order = Order.objects.get(customer=current_user, paymenttype=None)
