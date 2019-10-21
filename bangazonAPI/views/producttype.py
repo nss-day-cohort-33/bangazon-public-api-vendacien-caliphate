@@ -88,7 +88,7 @@ class ProductTypes(ViewSet):
         """
         product_types = ProductType.objects.all()
 
-        # Support filtering attractions by area id
+        # Support filtering products by product categories
         name = self.request.query_params.get('name', None)
         if name is not None:
             product_types = product_types.filter(name__id=name)
