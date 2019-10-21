@@ -68,7 +68,7 @@ class Customers(ViewSet):
         """
         customers = Customer.objects.all()
 
-        # Support filtering Products by producttype id
+        # Support filtering Products by user id
         user_id = self.request.query_params.get('customer', None)
         if user_id is not None:
             customers = customers.filter(user__id=user_id)
