@@ -128,9 +128,10 @@ class Products(ViewSet):
         quantity = self.request.query_params.get('quantity', None)
 
         limit = self.request.query_params.get('limit', None)
-        product_id = self.request.query_params.get('id', None)
         if limit is not None:
-            product = Product.objects.all()[:int(limit)]
+            product = Product.objects.order_by('-id')
+            products = product[:int(limit)]
+
 
         if city == "":
             products = Product.objects.all()
